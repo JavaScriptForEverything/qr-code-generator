@@ -1,0 +1,44 @@
+
+-----------------------
+$ npm create vite@latest --template react-ts
+
+$ npm i html2canvas jspdf qrcode sheetjs xlsx file-saver uuid
+$ npm i -D @types/qrcode @types/file-saver   
+
+$ npm install tailwindcss @tailwindcss/vite
+
+/vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [
+		react(),
+		tailwindcss()
+	],
+})
+
+
+/index.css
+@import "tailwindcss";
+
+-----------------------
+
+
+amar akti react+typescript+tailwind+vite project a qrcode generate korbe, and that generated code must be 100% working on latest andorid and ios scanner,
+
+details:
+1. data asbe excel sheet theke or form theke,
+2. on submit show the details on page as card (picture is given for demo)
+3. download button will be to download as pdf or image,
+
+give me complete code and don't miss any little details, if need anything then ask me.
+
+
+Data Sample:
+Name	Designation And Department	Location	Address And Others
+Ms. Sharmin Sultana Shumi	Branch Operation Manager, North Zone, Distribution Network	Uttara Branch	Atlanta Trade Center( Floor), House: 1/A, Road:1, Sector: 04,Uttara,Dhaka-1230, Mobile: 01748474995, Email: sharminsultana.shumi@bracbank.com
+Md. Biplob Hossen	Business Relationship Officer, Distribution Network, Branch Marketing, Distribution Network	Jhenaidah SME / Krishi Branch	House No - 23 (1st floor), Agnibina Sarak, Jhenaidah., Mobile: 01302226490, Email: mdbiplob.hossen@bracbank.com
+Md. Biplob Hossen	Business Relationship Officer, Distribution Network, Branch Marketing, Distribution Network	Jhenaidah SME / Krishi Branch	House No - 23 (1st floor), Agnibina Sarak, Jhenaidah., Mobile: 01302226490, Email: mdbiplob.hossen@bracbank.com
+Shafiul Islam	Universal Officer, Cumilla Region, South Zone, Distribution Network	Cumilla SME / Krishi Branch	Desh Jannat Tower (1st & 2nd Floor),66 , Chawkbazar (Dhaka – Chattogram Trunk Road), Comilla-3500, Mobile: 01847431711, Email: shafiul.islam@bracbank.com
