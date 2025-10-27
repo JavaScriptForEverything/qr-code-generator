@@ -205,17 +205,61 @@ export default function App() {
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 no-print">
         <div className="bg-white p-4 rounded shadow">
-          <h2 className="font-semibold mb-2">Upload Excel / CSV</h2>
+          <h2 className="font-semibold mb-3">Upload Excel / CSV</h2>
           <input
             ref={fileRef}
             type="file"
             accept=".xlsx,.xls,.csv"
             onChange={handleFile}
-            className="mb-2 w-full"
+            className="mb-3 w-full"
           />
-          <p className="text-xs text-gray-500">
-            Headers: {sampleHeaders.join(", ")}
-          </p>
+          <div className="text-xs text-gray-700 bg-gray-50 p-3 rounded">
+            <p className="font-semibold mb-2">Excel Format (Required Headers):</p>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border border-gray-300 px-2 py-1">Name</th>
+                  <th className="border border-gray-300 px-2 py-1">Designation</th>
+                  <th className="border border-gray-300 px-2 py-1">Department</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-gray-300 px-2 py-1">John Doe</td>
+                  <td className="border border-gray-300 px-2 py-1">Manager</td>
+                  <td className="border border-gray-300 px-2 py-1">HR</td>
+                </tr>
+              </tbody>
+            </table>
+            <table className="w-full text-left border-collapse mt-2">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border border-gray-300 px-2 py-1">Location</th>
+                  <th className="border border-gray-300 px-2 py-1">Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-gray-300 px-2 py-1">Dhaka</td>
+                  <td className="border border-gray-300 px-2 py-1">123 Main St</td>
+                </tr>
+              </tbody>
+            </table>
+            <table className="w-full text-left border-collapse mt-2">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border border-gray-300 px-2 py-1">Mobile</th>
+                  <th className="border border-gray-300 px-2 py-1">Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-gray-300 px-2 py-1">+880123456789</td>
+                  <td className="border border-gray-300 px-2 py-1">john@example.com</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded shadow">
