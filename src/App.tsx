@@ -30,7 +30,7 @@ function buildVCard(c: Contact): string {
     .join("\n");
 }
 
-const sampleHeaders = ["Name", "Designation", "Department", "Location", "Address", "Mobile", "Email"];
+// const sampleHeaders = ["Name", "Designation", "Department", "Location", "Address", "Mobile", "Email"];
 
 export default function App() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -339,7 +339,7 @@ export default function App() {
           {contacts.map((c) => (
             <div key={c.id} className="bg-white p-4 rounded shadow" style={{ width: 600 }}>
               <div className="flex gap-4 mb-4">
-                <div className="w-24 h-24 bg-gray-100 flex-shrink-0 rounded overflow-hidden">
+                <div className="w-24 h-24 bg-gray-100 shrink-0 rounded overflow-hidden">
                   <img
                     src="/logo.png"
                     alt="Logo"
@@ -388,7 +388,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="w-32 flex-shrink-0 flex items-center justify-center">
+                <div className="w-32 shrink-0 flex items-center justify-center">
                   {c.qrDataUrl ? (
                     <img
                       src={c.qrDataUrl}

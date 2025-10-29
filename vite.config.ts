@@ -4,8 +4,17 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-		react(),
-		tailwindcss()
-	],
-})
+  plugins: [ react(), tailwindcss() ],
+
+  server: {
+    port: 5175,
+    host: "0.0.0.0",
+    allowedHosts: ["bizlyne.com", "www.bizlyne.com", ".bizlyne.com", 'localhost'],
+  },
+  preview: {
+    port: 5175,
+    host: "0.0.0.0",
+    allowedHosts: ["bizlyne.com", "www.bizlyne.com", ".bizlyne.com", 'localhost'],
+  },
+});
+
