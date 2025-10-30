@@ -11,6 +11,7 @@ export interface Contact {
   address: string;
   mobile: string;
   email: string;
+  website: string; 
   qrDataUrl?: string;
 }
 
@@ -24,6 +25,7 @@ function buildVCard(c: Contact): string {
     c.mobile && `TEL;CELL:${c.mobile}`,
     c.email && `EMAIL:${c.email}`,
     c.address && c.location && `ADR;TYPE=WORK:;;${c.address};${c.location};;`,
+    c.website && `URL:${c.website}`, 
     "END:VCARD",
   ]
     .filter(Boolean)
@@ -43,6 +45,7 @@ export default function App() {
     address: "",
     mobile: "",
     email: "",
+    website: "",
   });
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -63,6 +66,7 @@ export default function App() {
       address: String(row["Address"] || ""),
       mobile: String(row["Mobile"] || ""),
       email: String(row["Email"] || ""),
+		  website: String(row["Website"] || ""), 
     }));
 
     await generateQRCodesAndSet(mapped);
@@ -85,6 +89,7 @@ export default function App() {
       address: "",
       mobile: "",
       email: "",
+      website: "",
     });
   }
 
@@ -168,6 +173,11 @@ export default function App() {
       ctx.fillText(`Email: ${c.email}`, 150, y);
       y += 25;
     }
+		if (c.website) {
+			ctx.fillText(`Website: ${c.website}`, 150, y);
+			y += 25;
+		}
+
 
     if (c.qrDataUrl) {
       const qr = new Image();
@@ -245,20 +255,23 @@ export default function App() {
                 </tr>
               </tbody>
             </table>
-            <table className="w-full text-left border-collapse mt-2">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="border border-gray-300 px-2 py-1">Mobile</th>
-                  <th className="border border-gray-300 px-2 py-1">Email</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border border-gray-300 px-2 py-1">+880123456789</td>
-                  <td className="border border-gray-300 px-2 py-1">john@example.com</td>
-                </tr>
-              </tbody>
-            </table>
+						<table className="w-full text-left border-collapse mt-2">
+							<thead>
+								<tr className="bg-gray-200">
+									<th className="border border-gray-300 px-2 py-1">Mobile</th>
+									<th className="border border-gray-300 px-2 py-1">Email</th>
+									<th className="border border-gray-300 px-2 py-1">Website</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td className="border border-gray-300 px-2 py-1">+880123456789</td>
+									<td className="border border-gray-300 px-2 py-1">john@example.com</td>
+									<td className="border border-gray-300 px-2 py-1">https://example.com</td>
+								</tr>
+							</tbody>
+						</table>
+
           </div>
         </div>
 
@@ -307,6 +320,12 @@ export default function App() {
               onChange={(e) => setManual((m) => ({ ...m, email: e.target.value }))}
               className="border rounded px-3 py-2 text-sm col-span-2"
             />
+						<input
+							placeholder="Website URL"
+							value={manual.website}
+							onChange={(e) => setManual((m) => ({ ...m, website: e.target.value }))}
+							className="border rounded px-3 py-2 text-sm col-span-2"
+						/>
           </div>
           <button
             onClick={addManual}
@@ -385,6 +404,13 @@ export default function App() {
                         <span>{c.email}</span>
                       </>
                     )}
+										{c.website && (
+											<>
+												<span className="font-semibold">Website:</span>
+												<span>{c.website}</span>
+											</>
+										)}
+
                   </div>
                 </div>
 

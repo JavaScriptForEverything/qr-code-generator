@@ -1,10 +1,11 @@
 services:
-  vite-dev:
+  vite_svc-dev:
     build:
       context: .
       dockerfile: Dockerfile.dev
     ports:
       - "5175:5175"
+    restart: always
     volumes:
       - .:/app
       - /app/node_modules
@@ -12,7 +13,7 @@ services:
       - NODE_ENV=development
     command: npm run dev
 
-  vite-prod:
+  vite_svc-prod:
     build:
       context: .
       dockerfile: Dockerfile
