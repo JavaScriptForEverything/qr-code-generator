@@ -1,6 +1,11 @@
 # QR Code Generator
 
 
+### Live
+
+Browse: http://194.238.17.79:5175/
+
+
 
 ### Development mode
 ```
