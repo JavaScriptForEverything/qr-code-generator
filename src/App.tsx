@@ -6,12 +6,8 @@ export interface Contact {
   id: string;
   name: string;
   designation: string;
-  department: string;
   location: string;
   address: string;
-  mobile: string;
-  email: string;
-  website: string;
   qrDataUrl?: string;
 }
 
@@ -21,11 +17,9 @@ function buildVCard(c: Contact): string {
     "VERSION:3.0",
     `FN:${c.name}`,
     c.designation && `TITLE:${c.designation}`,
-    c.department && `ORG:${c.department}`,
-    c.mobile && `TEL;CELL:${c.mobile}`,
-    c.email && `EMAIL:${c.email}`,
-    c.address && c.location && `ADR;TYPE=WORK:;;${c.address};${c.location};;`,
-    c.website && `URL:${c.website}`,
+    c.location && `ORG:${c.location}`,
+    c.address && `ADR;TYPE=WORK:;;${c.address};;;;`,
+    c.address && `NOTE:${c.address}`,
     "END:VCARD",
   ]
     .filter(Boolean)
@@ -34,6 +28,7 @@ function buildVCard(c: Contact): string {
 
 export default function App() {
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [isDownloading, setIsDownloading] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -48,13 +43,9 @@ export default function App() {
     const mapped: Contact[] = json.map((row, idx) => ({
       id: `contact-${Date.now()}-${idx}`,
       name: String(row["Name"] || ""),
-      designation: String(row["Designation"] || ""),
-      department: String(row["Department"] || ""),
+      designation: String(row["Designation And Department"] || ""),
       location: String(row["Location"] || ""),
-      address: String(row["Address"] || ""),
-      mobile: String(row["Mobile"] || ""),
-      email: String(row["Email"] || ""),
-      website: String(row["Website"] || ""),
+      address: String(row["Address And Others"] || ""),
     }));
 
     await generateQRCodesAndSet(mapped);
@@ -68,27 +59,29 @@ export default function App() {
       const qrDataUrl = await QRCode.toDataURL(vcard, {
         errorCorrectionLevel: "M",
         type: "image/png",
-        margin: 1,
-        scale: 8,
+        margin: 2,
+        width: 256,
       });
       out.push({ ...c, qrDataUrl });
     }
     setContacts(out);
   }
 
-  async function downloadQRasSVG(c: Contact) {
+  async function downloadQRasSVG(c: Contact, index: number) {
     const vcard = buildVCard(c);
     const svg = await QRCode.toString(vcard, {
       type: "svg",
       errorCorrectionLevel: "M",
-      margin: 1,
+      margin: 2,
+      width: 256,
     });
 
     const blob = new Blob([svg], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `qr-${c.name.replace(/\s+/g, "-")}.svg`;
+    const paddedIndex = String(index + 1).padStart(2, "0");
+    link.download = `${paddedIndex}.${c.name.replace(/\s+/g, "-")}.svg`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -96,9 +89,14 @@ export default function App() {
   }
 
   async function downloadAllQRCodes() {
-    for (const c of contacts) {
-      await downloadQRasSVG(c);
-      await new Promise((r) => setTimeout(r, 300));
+    setIsDownloading(true);
+    try {
+      for (let i = 0; i < contacts.length; i++) {
+        await downloadQRasSVG(contacts[i], i);
+        await new Promise((r) => setTimeout(r, 100));
+      }
+    } finally {
+      setIsDownloading(false);
     }
   }
 
@@ -130,9 +128,12 @@ export default function App() {
         <div className="mb-6 no-print">
           <button
             onClick={downloadAllQRCodes}
-            className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700"
+            disabled={isDownloading}
+            className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            Download All QR Codes ({contacts.length})
+            {isDownloading
+              ? `Downloading... (${contacts.length})`
+              : `Download All QR Codes (${contacts.length})`}
           </button>
         </div>
       )}
@@ -164,24 +165,21 @@ export default function App() {
                   <p className="text-sm text-blue-700 font-medium">{c.designation}</p>
 
                   <div className="mt-2 text-sm text-gray-700 space-y-1">
-                    {c.department && <div>{c.department}</div>}
+                    {c.designation && <div>{c.designation}</div>}
                     {c.location && <div>{c.location}</div>}
                     {c.address && <div>{c.address}</div>}
-                    {c.mobile && <div>{c.mobile}</div>}
-                    {c.email && <div>{c.email}</div>}
-                    {c.website && <div>{c.website}</div>}
                   </div>
                 </div>
 
-                <div className="w-32 shrink-0 flex items-center justify-center">
+                <div className="w-40 shrink-0 flex items-center justify-center">
                   {c.qrDataUrl ? (
                     <img
                       src={c.qrDataUrl}
                       alt="QR"
-                      className="w-32 h-32 object-contain border"
+                      className="w-40 h-40 object-contain border"
                     />
                   ) : (
-                    <div className="w-32 h-32 border grid place-items-center text-xs text-gray-400">
+                    <div className="w-40 h-40 border grid place-items-center text-xs text-gray-400">
                       QR
                     </div>
                   )}
@@ -190,7 +188,7 @@ export default function App() {
 
               <div className="flex gap-2 no-print border-t pt-3">
                 <button
-                  onClick={() => downloadQRasSVG(c)}
+                  onClick={() => downloadQRasSVG(c, contacts.indexOf(c))}
                   className="flex-1 px-3 py-2 rounded border border-blue-600 text-blue-600 hover:bg-blue-50"
                 >
                   Download QR (SVG)
